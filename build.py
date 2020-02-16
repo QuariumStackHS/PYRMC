@@ -1,6 +1,7 @@
 import os
 import sys
 import shutil
+import sqlite3
 from zipfile import ZipFile
 
 
@@ -77,6 +78,17 @@ def clean():
 
 
 def build():
+    try:
+        os.remove(".setupinfo.db3")
+    except:
+        pass
+    conn = sqlite3.connect(".setupinfo.db3")
+    c = conn.cursor()
+    c.execute(f'CREATE TABLE info (name text, version text)')
+    c.execute(f'INSERT INTO info VALUES ("{get_arg2()}","{get_arg3()}")')
+    conn.commit()
+    c.close
+
     archive()
     clean()
     os.system("python3 -m pip install --user --upgrade setuptools wheel")
@@ -85,6 +97,10 @@ def build():
     os.system("python3 -m twine upload dist/* --verbose")
     if "publishac" in get_arg1():
         clean()
+        try:
+            os.remove(".setupinfo.db3")
+        except:
+            pass
 
 
 def main():

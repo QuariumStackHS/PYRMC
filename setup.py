@@ -1,11 +1,22 @@
 import setuptools
-
+import sqlite3
 with open("README.md", "r") as fh:
     long_description = fh.read()
-
+def get_name():
+    conn = sqlite3.connect(".setupinfo.db3")
+    c = conn.cursor()
+    c.execute(f'SELECT name FROM info')
+    c=c.fetchone()
+    return str(c[0])
+def get_version():
+    conn = sqlite3.connect(".setupinfo.db3")
+    c = conn.cursor()
+    c.execute(f'SELECT version FROM info')
+    c=c.fetchone()
+    return str(c[0])
 setuptools.setup(
-    name="PYRMC",
-    version="2.0.1",
+    name=get_name(),
+    version=get_version(),
     author="pyslow_riding",
     author_email="slowridingytb@gmail.com",
     description="console line tool to add function to be independent!",
